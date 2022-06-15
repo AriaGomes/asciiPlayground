@@ -8,7 +8,8 @@ import { AsciiEffect } from 'three-stdlib'
 
 export default function App() {
   const options = useControls({
-    scale: { value: 1, min: 1, max: 5, step: 0.1 },
+    "geometry scale": { value: 1, min: 1, max: 5, step: 0.1 },
+    "rotation delta": { value: 0, min: 0, max: 0.5, step: 0.01 },
   })
   return (
     <Canvas>
@@ -24,16 +25,13 @@ export default function App() {
 
 function Torusknot(props) {
   const ref = useRef()
-  const [hovered, hover] = useState(false)
-  useCursor(hovered)
-  useFrame((state, delta) => (ref.current.rotation.x = ref.current.rotation.y += delta / 2))
+  useFrame((state, delta) => (ref.current.rotation.x = ref.current.rotation.y += delta / 2 + props["rotation delta"]))
   return (
     <mesh
-      {...props}
       ref={ref}
-      scale={props.scale}
-      onPointerOver={() => hover(true)}
-      onPointerOut={() => hover(false)}>
+      scale={props['geometry scale']}
+      >
+
       <torusKnotGeometry args={[1, 0.2, 128, 32]} />
       <meshStandardMaterial color="orange" />
     </mesh>
