@@ -8,12 +8,13 @@ import { AsciiEffect } from 'three-stdlib'
 
 export default function App() {
   const options = useControls({
-    "scale": { value: 1, min: 1, max: 5, step: 0.1 },
-    "rotation": { value: 0, min: 0, max: 0.5, step: 0.01 },
+    "scale": { value: 1, min: 0.1, max: 5, step: 0.1 },
+    "rotation": { value: 0, min: -0.2, max: 0.2, step: 0.01 },
     "invert": { value: true, min: false, max: true, step: 1 },
     "characters": { value: '.:-+*=%@#', min: ' ', max: ' '},
     "text color": { value: 'white', min: 'black', max: 'white', step: 'white'},
     "background color": { value: 'black', min: 'black', max: 'black', step: 'black'},
+    "mesh color": { value: 'orange', min: 'black', max: 'white', step: 'white'},
   })
   return (
     <Canvas>
@@ -37,7 +38,7 @@ function Torusknot(props) {
       >
 
       <torusKnotGeometry args={[1, 0.2, 128, 32]} />
-      <meshStandardMaterial color="orange" />
+      <meshStandardMaterial color={props["mesh color"]} />
     </mesh>
   )
 }
