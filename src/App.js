@@ -8,8 +8,12 @@ import { AsciiEffect } from 'three-stdlib'
 
 export default function App() {
   const options = useControls({
-    "geometry scale": { value: 1, min: 1, max: 5, step: 0.1 },
-    "rotation delta": { value: 0, min: 0, max: 0.5, step: 0.01 },
+    "scale": { value: 1, min: 1, max: 5, step: 0.1 },
+    "rotation": { value: 0, min: 0, max: 0.5, step: 0.01 },
+    "invert": { value: true, min: false, max: true, step: 1 },
+    "characters": { value: '.:-+*=%@#', min: ' ', max: ' '},
+    "text color": { value: 'white', min: 'black', max: 'white', step: 'white'},
+    "background color": { value: 'black', min: 'black', max: 'black', step: 'black'},
   })
   return (
     <Canvas>
@@ -18,18 +22,18 @@ export default function App() {
       <pointLight position={[-10, -10, -10]} />
       <Torusknot {...options}/>
       <OrbitControls />
-      <AsciiRenderer invert {...options} />
+      <AsciiRenderer {...options} />
     </Canvas>
   )
 }
 
 function Torusknot(props) {
   const ref = useRef()
-  useFrame((state, delta) => (ref.current.rotation.x = ref.current.rotation.y += delta / 2 + props["rotation delta"]))
+  useFrame((state, delta) => (ref.current.rotation.x = ref.current.rotation.y += delta / 2 + props["rotation"]))
   return (
     <mesh
       ref={ref}
-      scale={props['geometry scale']}
+      scale={props['scale']}
       >
 
       <torusKnotGeometry args={[1, 0.2, 128, 32]} />
@@ -38,21 +42,23 @@ function Torusknot(props) {
   )
 }
 
-function AsciiRenderer({ renderIndex = 1, characters = ' .:-+*=%@#', speed, ...options }) {
+function AsciiRenderer({ renderIndex = 1, characters, ...options }) {
   // Reactive state
   const { size, gl, scene, camera } = useThree()
 
+  characters = " ".concat(...characters)
+
+
   // Create effect
-  const effect = useMemo(() => {
-    const effect = new AsciiEffect(gl, characters, options)
+  let effect = useMemo(() => {
+    let effect = new AsciiEffect(gl, characters, options)
     effect.domElement.style.position = 'absolute'
     effect.domElement.style.top = '0px'
     effect.domElement.style.left = '0px'
-    effect.domElement.style.color = 'white'
-    effect.domElement.style.backgroundColor = 'black'
-    effect.domElement.style.pointerEvents = 'none'
+    effect.domElement.style.color = options['text color']
+    effect.domElement.style.backgroundColor = options['background color']
     return effect
-  }, [characters, options.invert])
+  }, [characters, options.invert, options['text color'], options['background color']])
 
   // Append on mount, remove on unmount
   useEffect(() => {
