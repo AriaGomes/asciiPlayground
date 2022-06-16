@@ -1,23 +1,28 @@
 // Threejs example: threejs.org/examples/?q=asc#webgl_effects_ascii
-//SCALE IS RUNING THINGS
 
 import { useEffect, useRef, useMemo } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { OrbitControls} from '@react-three/drei'
 import { useControls } from 'leva'
 import { AsciiEffect } from 'three-stdlib'
-import { BoxGeometry } from 'three'
 
 export default function App() {
+  //TODO: add groups/folders
   const options = useControls({
-    "scale": { value: 1, min: 0.1, max: 5, step: 0.1 },
-    "rotation": { value: 0, min: -0.2, max: 0.2, step: 0.05 },
+    // ASCII options
     "invert": { value: true, min: false, max: true },
     "characters": { value: '.:-+*=%@#'},
     "text color": { value: 'white'},
     "background": { value: 'black'},
+    // Mesh options
     "mesh color": { value: 'orange'},
     "mesh type": { options: ['torusKnot', 'box'], value: 'torusKnot'},
+    "rotation": { value: 0, min: -0.2, max: 0.2, step: 0.05 }
+    // TODO: add mesh specific options
+    // Box options
+    // TorusKnot options
+    //...
+    
   })
   return (
     <Canvas>
@@ -38,10 +43,9 @@ function Box(props) {
   return (
     <mesh
       ref={ref}
-      scale={props['scale']}
       visible={props['mesh type'] === 'box'}
       >
-     
+      
       <boxGeometry args={[1, 1, 1]} />
       <meshStandardMaterial color={props["mesh color"]} />
     </mesh>
@@ -54,7 +58,6 @@ function Torusknot(props) {
   return (
     <mesh
       ref={ref}
-      scale={props['scale']}
       visible={props['mesh type'] === 'torusKnot'}
       >
       
